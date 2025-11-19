@@ -1,0 +1,25 @@
+
+#Dockerのバージョン　書かないでもおｋ
+version: '3.9'
+
+services:
+  app:
+    image: php:8.3-fpm
+    container_name: php-app
+    #インタラクティブでコンテナ入った時のカレントディレクトリーを指定
+    working_dir: /var/www/html
+    #コンテナ内にも同じディレクトリーを
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "9000:9000"   # PHP-FPM
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
